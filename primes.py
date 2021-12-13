@@ -16,12 +16,10 @@ __email__ = "sidd.s.pai@gmail.com"
 def count_primes(limit: int) -> int:
     """Counts the number of primes from 2 to the limit, and returns the result."""
 
-    primes = [2, 3]
-
     if limit <= 1:
         raise ValueError("limit has to be greater than or equal to 2.")
-
-    if limit in primes:
+        
+    if limit in (primes := [2, 3]):
         return limit - 1
 
     def is_prime(n: int) -> bool:
