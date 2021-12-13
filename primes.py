@@ -1,45 +1,57 @@
 # !usr/bin/env python3
 
-"""Script for checking whether an integer n is prime or not.
-Optimized for high performance.
+"""Counts the number of primes from 2 to a user-specified limit.
+A number is considered prime if it is greater than or equal to 2,
+and its only factors are 1 and itself.
 """
 
 import cProfile
 import pstats
-import time
-from functools import cache
 from math import isqrt
 
 __author__ = "Siddharth (Sidd) Pai"
 __email__ = "sidd.s.pai@gmail.com"
 
 
-@cache
-def is_prime(n: int) -> bool:
-    """Returns the truth value of whether a number is prime."""
+def count_primes(limit: int) -> int:
+    """Counts the number of primes from 2 to the limit, and returns the result."""
 
-    if n == 2 or n == 3:
-        return True
+    primes = [2, 3]
 
-    if not n & 1 or n <= 1:
-        return False
+    if limit <= 1:
+        raise ValueError("limit has to be greater than or equal to 2.")
 
-    if not n % (s := isqrt(n)):
-        return False
+    if limit in primes:
+        return limit - 1
 
-    for i in filter(is_prime, range(3, s, 2)):
-        if not n % i:
+    def is_prime(n: int) -> bool:
+
+        if not n % (s := isqrt(n)):
             return False
 
-    return True
+        i = 1
+        j = primes[i]
+
+        while j < s:
+            if not n % j:
+                return False
+            i += 1
+            j = primes[i]
+
+        primes.append(n)
+
+        return True
+
+    for i in range(5, limit, 2):
+        is_prime(i)
+
+    return len(primes)
 
 
-def main() -> None:
-    with cProfile.Profile(timer=time.perf_counter, builtins=False) as pr:
-        # Check for the number of primes <= 250,000
-        primes = 0
-        for i in range(2, 250_001):
-            primes += is_prime(i)
+def main(n: int = 100_000) -> None:
+    with cProfile.Profile() as pr:
+        result = count_primes(n)
+        print(result)
         pr.print_stats(pstats.SortKey.TIME)
 
 
