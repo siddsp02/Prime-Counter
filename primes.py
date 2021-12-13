@@ -35,7 +35,7 @@ def count_primes(limit: int) -> int:
 
         primes.append(n)
 
-    for i in range(5, limit, 2):
+    for i in range(5, limit + 1, 2):
         is_prime(i)
 
     return len(primes)
