@@ -8,37 +8,32 @@ and its only factors are 1 and itself.
 import cProfile
 import pstats
 from math import isqrt
+from itertools import takewhile
 
 __author__ = "Siddharth (Sidd) Pai"
 __email__ = "sidd.s.pai@gmail.com"
 
 
 def count_primes(limit: int) -> int:
-    """Counts the number of primes from 2 to the limit, and returns the result."""
+    """Returns the number of primes from 2 to the limit specified."""
 
     if limit <= 1:
-        raise ValueError("limit has to be greater than or equal to 2.")
-        
+        return 0
+
     if limit in (primes := [2, 3]):
         return limit - 1
 
-    def is_prime(n: int) -> bool:
-
+    def is_prime(n: int) -> None:
         if not n % (s := isqrt(n)):
-            return False
+            return
 
-        i = 1
-        j = primes[i]
-
-        while j < s:
-            if not n % j:
-                return False
-            i += 1
-            j = primes[i]
+        for prime in primes:
+            if not n % prime:
+                return
+            if s < prime:
+                break
 
         primes.append(n)
-
-        return True
 
     for i in range(5, limit, 2):
         is_prime(i)
@@ -54,4 +49,4 @@ def main(n: int = 100_000) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(250_000)
