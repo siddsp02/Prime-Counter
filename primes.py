@@ -5,46 +5,26 @@ A number is considered prime if it is greater than or equal to 2,
 and its only factors are 1 and itself.
 """
 
+from math import isqrt
 import cProfile
 import pstats
-from math import isqrt
-from itertools import takewhile
-
-__author__ = "Siddharth (Sidd) Pai"
-__email__ = "sidd.s.pai@gmail.com"
 
 
 def count_primes(limit: int) -> int:
     """Returns the number of primes from 2 to the limit specified."""
 
-    if limit <= 1:
-        return 0
+    multiples = set(range(2, limit + 1, 2))
 
-    if limit in (primes := [2, 3]):
-        return limit - 1
+    for i in range(3, isqrt(limit) + 1, 2):
+        if i not in multiples:
+            multiples.update(range(i << 1, limit + 1, i))
 
-    def is_prime(n: int) -> None:
-        if not n % (s := isqrt(n)):
-            return
-
-        for prime in primes:
-            if not n % prime:
-                return
-            if s < prime:
-                break
-
-        primes.append(n)
-
-    for i in range(5, limit + 1, 2):
-        is_prime(i)
-
-    return len(primes)
+    return limit - len(multiples)
 
 
 def main(n: int = 100_000) -> None:
     with cProfile.Profile() as pr:
-        result = count_primes(n)
-        print(result)
+        print(count_primes(n))
         pr.print_stats(pstats.SortKey.TIME)
 
 
