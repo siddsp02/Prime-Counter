@@ -12,13 +12,10 @@ import pstats
 
 def count_primes(limit: int) -> int:
     """Returns the number of primes from 2 to the limit specified."""
-
     multiples = set(range(2, limit + 1, 2))
-
     for i in range(3, isqrt(limit) + 1, 2):
         if i not in multiples:
             multiples.update(range(i << 1, limit + 1, i))
-
     return limit - len(multiples)
 
 
